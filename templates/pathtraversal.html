@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Path Traversal Vulnerability</title>
+</head>
+<body>
+    <h1>Path Traversal Vulnerability</h1>
+    <form action="/read_file" method="POST">
+        <label for="filename">Filename:</label>
+        <input type="text" name="filename" id="filename" required>
+        <input type="submit" value="Read file">
+    </form>
+</body>
+</html>
