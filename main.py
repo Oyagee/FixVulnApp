@@ -36,8 +36,8 @@ def sqli():
         if elapsed_time < TIME_INTERVAL and attempts >= MAX_ATTEMPTS:
             return "<h1>Too many login attempts.</h1>", 429
 
-    query = f"SELECT * FROM users WHERE username='{username}' AND password='{password}'"
-    cursor.execute(query)
+    query = f"SELECT * FROM users WHERE username=? AND password=?"
+    cursor.execute(query, (username, password))
     result = cursor.fetchone()
 
     if result:
