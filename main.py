@@ -3,6 +3,7 @@ import sqlite3
 import time
 import shlex
 from markupsafe import escape
+import html
 import os
 import subprocess
 from werkzeug.utils import secure_filename
@@ -14,7 +15,7 @@ app = Flask(__name__, template_folder='templates')
 @app.route("/")
 def index():
     name = request.args.get("name", "")
-    name = escape(name)
+    name = html.escape(name)
     return f"<h1>Hello, {name}!</h1>"
 
 #SQLI and BRUTE FORCE
