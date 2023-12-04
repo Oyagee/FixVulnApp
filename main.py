@@ -4,6 +4,7 @@ import time
 from markupsafe import escape
 import os
 import subprocess
+from werkzeug.utils import secure_filename
 
 
 app = Flask(__name__, template_folder='templates')
@@ -81,14 +82,21 @@ def pathtraversal():
 @app.route('/read_file', methods=['POST'])
 def read_file():
     filename = request.form.get('filename')
-    filepath = os.path.join('uploads', filename)
 
-    try:
-        with open(filepath, 'r') as file:
-            content = file.read()
-            return content
-    except Exception as e:
-        return str(e)
+    if not os.path.isabs(filename):
+
+        filename = secure_filename(filename)
+        filepath = os.path.join('uploads', filename)
+
+        if os.path.realpath(filepath).startswith(os.path.realpath('uploads')):
+            try:
+                with open(filepath, 'r') as file:
+                    content = file.read()
+                    return content
+            except Exception as e:
+                return str(e)
+
+    return 'Некорректный путь к файлу'
 
 ### OS command injection
 
