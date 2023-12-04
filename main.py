@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, redirect, make_response
 import sqlite3
 import time
+import shlex
 from markupsafe import escape
 import os
 import subprocess
@@ -107,7 +108,15 @@ def osci():
 @app.route('/execute', methods=['POST'])
 def execute():
     command = request.form.get('command')
-    return subprocess.check_output(command, shell=True)
+    try:
+        args = shlex.split(command)
+        output = subprocess.check_output(args, shell=False)
+    except subprocess.CalledProcessError as e:
+        output = e.output
+    except Exception as e:
+        output = str(e)
+
+    return output
 
 if __name__ == "__main__":
     app.run(debug=True)
