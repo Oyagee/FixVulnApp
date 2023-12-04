@@ -1,5 +1,6 @@
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template, redirect, make_response
 import sqlite3
+import time
 from markupsafe import escape
 import os
 import subprocess
@@ -11,6 +12,7 @@ app = Flask(__name__, template_folder='templates')
 @app.route("/")
 def index():
     name = request.args.get("name", "")
+    name = escape(name)
     return f"<h1>Hello, {name}!</h1>"
 
 #SQLI and BRUTE FORCE
@@ -18,25 +20,39 @@ def index():
 conn = sqlite3.connect('database.db', check_same_thread=False)
 cursor = conn.cursor()
 
+login_attempts = {}
+MAX_ATTEMPTS = 5
+TIME_INTERVAL = 60
 @app.route("/sqli/")
 def sqli():
     username = request.args.get("username", "")
     password = request.args.get("password", "")
+
+    if username in login_attempts:
+        attempts, last_attempt_time = login_attempts[username]
+
+        elapsed_time = time.time() - last_attempt_time
+
+        if elapsed_time < TIME_INTERVAL and attempts >= MAX_ATTEMPTS:
+            return "<h1>Too many login attempts.</h1>", 429
+
     query = f"SELECT * FROM users WHERE username='{username}' AND password='{password}'"
     cursor.execute(query)
     result = cursor.fetchone()
 
     if result:
+        if username in login_attempts:
+            del login_attempts[username]
         return "<h1>Login successful.</h1>", 201
     else:
-        return "<h1>Deny</h1>", 400
-
-
-
-
+        if username in login_attempts:
+            attempts, last_attempt_time = login_attempts[username]
+            login_attempts[username] = (attempts + 1, time.time())
+        else:
+            login_attempts[username] = (1, time.time())
+        return f"<h1>Deny.</h1>", 400
 
 ############## IDOR
-
 
 users = [
     {"id": 1, "name": "Роман", "email": "@mail.ru"},
@@ -73,25 +89,6 @@ def read_file():
             return content
     except Exception as e:
         return str(e)
-
-
-
-### Brute Force
-
-@app.route('/login')
-def log():
-    return render_template('login.html')
-
-@app.route('/login', methods=['POST'])
-def login():
-    username = request.args.get("username", "")
-    password = request.args.get("password", "")
-
-    if username == 'admin' and password == 'password':
-        return "<h1>Login successful.</h1>"
-    else:
-        return "<h1>Deny.</h1>"
-
 
 ### OS command injection
 
