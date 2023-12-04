@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Результат выполнения команды</title>
+    <title>Профиль пользователя</title>
 </head>
 <body>
-    <h1>Результат выполнения команды:</h1>
-    <h3>stdout:</h3>
-    <pre>{{ stdout }}</pre>
-    <h3>stderr:</h3>
-    <pre>{{ stderr }}</pre>
+    <h1>Профиль пользователя</h1>
+    <p><strong>Имя:</strong> {{ user.name }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
 </body>
 </html>

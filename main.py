@@ -2,7 +2,6 @@ from flask import Flask, request, render_template, redirect, make_response
 import sqlite3
 import time
 import shlex
-from markupsafe import escape
 import html
 import os
 import subprocess
@@ -58,20 +57,22 @@ def sqli():
 ############## IDOR
 
 users = [
-    {"id": 1, "name": "Роман", "email": "@mail.ru"},
-    {"id": 2, "name": "Алексей", "email": "@gmail.com"},
+    {"id": 1, "name": "Роман", "email": "oyage@mail.ru", "login": "roman", "password": "pass"},
+    {"id": 2, "name": "Алексей", "email": "github.com/Oyagee", "login": "alex", "password": "pass"},
 ]
 
+auth_id = 1
 @app.route('/idor/')
 def idor():
     return render_template('idor.html', users=users)
 
-
 @app.route('/user/<int:user_id>')
 def user_profile(user_id):
+    global auth_id
     for user in users:
         if user['id'] == user_id:
-            return render_template('profile.html', user=user)
+            if user_id == auth_id:
+                return render_template('profile.html', user=user)
     return redirect('/')
 
 #### Path Traversal
