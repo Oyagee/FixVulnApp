@@ -1,8 +1,8 @@
-# VulnApp
-Уязвимое приложение, которое включает в себя следующие уязвимости: XSS, IDOR, SQL Injection, OS command injection, Path Traversal, Brute Force
+# FixVulnApp
+Уязвимое приложение, которое включает в себя следующие уязвимости: XSS, IDOR, SQL Injection, OS command injection, Path Traversal, Brute Force. Уязвимости пофикшены.
 
 ### Инструкция по сборке и запуску приложения
-1. git clone https://github.com/Oyagee/VulnApp.git
+1. git clone https://github.com/Oyagee/FixVulnApp.git
 2. pip install -r .\requirements.txt
 3. python main.py
 
