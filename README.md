@@ -1,5 +1,5 @@
 # FixVulnApp
-Уязвимое приложение, которое включает в себя следующие уязвимости: XSS, IDOR, SQL Injection, OS command injection, Path Traversal, Brute Force. Уязвимости пофикшены.
+Уязвимое приложение, которое включает в себя следующие уязвимости: XSS, IDOR, SQL Injection, OS command injection, Path Traversal, Brute Force. Уязвимости исправлены.
 
 ### Инструкция по сборке и запуску приложения
 1. git clone https://github.com/Oyagee/FixVulnApp.git
